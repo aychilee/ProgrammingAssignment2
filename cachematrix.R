@@ -11,28 +11,29 @@
 makeCacheMatrix <- function(x = matrix()) {
   
   mat <- x
+  matInv <- NULL
   
   # create a function that sets the stored matrix
-  set <- function(y) {
+  setMatrix <- function(y) {
     mat <<- y
     matInv <<- NULL
   }
   
   # create a function that gets the stored matrix
-  get <- function() mat
+  getMatrix <- function() mat
   
   # create a function that stores the inverse of the matrix
-  setMatInv <- function(matrix) matInv <<- matrix
+  cacheInverse <- function(matrix) matInv <<- matrix
   
   # create a function that gets the stored inverse of the matrix
-  getMatInv <- function() matInv
+  getInverse <- function() matInv
   
   # return the different functions available in this object so that they can be called
   list(
-      set = set
-      ,get = get
-      ,setMatInv = setMatInv
-      ,getMatInv = getMatInv
+      setMatrix = setMatrix
+      ,getMatrix = getMatrix
+      ,cacheInverse = cacheInverse
+      ,getInverse = getInverse
   )
 }
 
@@ -43,7 +44,7 @@ cacheSolve <- function(x, ...) {
   ## Return a matrix that is the inverse of 'x'
   
   # get the stored matrix inverse
-  matInv <- x$getMatInv() 
+  matInv <- x$getInverse() 
   
   # check to see if the matInv has value, if so then return the matInv
   if(!is.null(matInv)) {
@@ -52,11 +53,11 @@ cacheSolve <- function(x, ...) {
   }
   
   # since there is no matInv, create one
-  data <- x$get()
+  data <- x$getMatrix()
   matInv <- solve(data, ...)
   
   # store in x using the special function
-  x$setMatInv(matInv)
+  x$cacheInverse(matInv)
   
   # return the matInv
   matInv
